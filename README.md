@@ -15,27 +15,19 @@
   - 线条颜色
 - **实时预览**：通过 Canvas 实时生成预览。
 
-## 使用方法
-
-1. 克隆项目到本地：
-```bash
-   git clone <仓库地址>
-   cd paper-generator
-```
-
 ## 项目结构
 
-PaperCreator/ 
-├── public 
-│ └── index.html
-│    ├─scripts
-│    │      app.js
-│    │      jspdf.umd.min.js
+PaperCreator/   
+├── public   
+│ └── index.html  
+│    ├─scripts  
+│    │      app.js  
+│    │      jspdf.umd.min.js  
 │    │
-│    └─styles
-│            styles.css 
-├── LICENSE
-└── README.md
+│    └─styles  
+│            styles.css   
+├── LICENSE  
+└── README.md  
 
 ## 使用方法
 
@@ -68,5 +60,5 @@ PaperCreator/
 本项目的开发过程中参考了以下资源和工具，在此表示感谢：
 - [jsPDF](https://github.com/parallax/jsPDF)：用于实现 PDF 导出功能的开源库。
 - HTML5 Canvas 文档和示例：为项目的绘图功能提供了技术支持。
-- 开源社区的开发者们：提供了许多关于 Canvas 绘图和前端开发的优秀示例和灵感。
+- 开源社区的开发者们：提供了许多关于 Canvas 绘图和前端开发的优秀示例和灵感。  
 此外，本项目的部分功能由AI 辅助完成。如果您发现本项目中引用了您的代码或资源，请随时联系我，我将补充相关的致谢信息。

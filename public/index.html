@@ -40,18 +40,24 @@
                 <label for="line-color">线条颜色:</label>
                 <input type="color" id="line-color" value="#000000">
 
-                <label for="margin-top">上边距 (mm):</label>
-                <input type="number" id="margin-top" value="20" min="0">
+                <!-- 页边距设置 -->
+                <div class="margin-settings">
+                    <label for="margin-top">纸张边距 (mm):</label>
+                    <div class="margin-row">
+                        <label for="margin-top">上 :</label>
+                        <input type="number" id="margin-top" value="20" min="0">
+                        <label for="margin-bottom">下 :</label>
+                        <input type="number" id="margin-bottom" value="20" min="0">
+                    </div>
+                    <div class="margin-row">
+                        <label for="margin-left">左 :</label>
+                        <input type="number" id="margin-left" value="18" min="0">
+                        <label for="margin-right">右 :</label>
+                        <input type="number" id="margin-right" value="18" min="0">
+                    </div>
+                </div>
 
-                <label for="margin-bottom">下边距 (mm):</label>
-                <input type="number" id="margin-bottom" value="20" min="0">
-
-                <label for="margin-left">左边距 (mm):</label>
-                <input type="number" id="margin-left" value="18" min="0">
-
-                <label for="margin-right">右边距 (mm):</label>
-                <input type="number" id="margin-right" value="18" min="0">
-
+                <label for="margin-top">保存输出:</label>
                 <button id="export-png">导出为 PNG</button>
                 <button id="export-pdf">导出为 PDF</button>
             </div>

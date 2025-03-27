@@ -121,11 +121,13 @@ function drawPaper() {
 
                 // 绘制外框
                 ctx.beginPath();
+                ctx.lineWidth = lineThickness * scaleFactor; // 外框线条宽度
                 ctx.rect(x, y, lineSpacing, lineSpacing);
                 ctx.stroke();
 
                 // 绘制对角线
                 ctx.beginPath();
+                ctx.lineWidth = (lineThickness * scaleFactor) / 4; // 米字线条宽度
                 ctx.moveTo(x, y);
                 ctx.lineTo(x + lineSpacing, y + lineSpacing);
                 ctx.moveTo(x + lineSpacing, y);

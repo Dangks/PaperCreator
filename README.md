@@ -69,3 +69,11 @@ PaperCreator/
 - HTML5 Canvas 文档和示例：为项目的绘图功能提供了技术支持。
 - 开源社区的开发者们：提供了许多关于 Canvas 绘图和前端开发的优秀示例和灵感。  
 此外，本项目的部分功能由AI 辅助完成。如果您发现本项目中引用了您的代码或资源，请随时联系我，我将补充相关的致谢信息。
+
+
+## 效果预览
+![image](https://github.com/user-attachments/assets/1b5a9299-9d00-4f9b-afe2-fce07f3fa4d4)
+![image](https://github.com/user-attachments/assets/09f9eb23-5d2d-4a7a-b07d-935cab264762)
+![image](https://github.com/user-attachments/assets/c131a4fe-6105-41c5-996a-6ea1fce63eb5)
+
+

@@ -16,19 +16,20 @@
 - **实时预览**：通过 Canvas 实时生成预览。
 
 ## 项目结构
-
+```bash
 PaperCreator/   
 ├── public   
-│ └── index.html  
+│    └── index.html  
+├── src
 │    ├─scripts  
-│    │      app.js  
-│    │      jspdf.umd.min.js  
+│    │  ├── app.js  
+│    │  └── jspdf.umd.min.js  
 │    │
 │    └─styles  
-│            styles.css   
+│       └── styles.css   
 ├── LICENSE  
 └── README.md  
-
+```
 ## 使用方法
 
 1. 克隆项目到本地：
@@ -46,8 +47,8 @@ PaperCreator/
 - JavaScript：核心逻辑，基于 Canvas 绘制纸张
 
 ## 未来改进
-- 增加更多纸张类型（如乐谱纸、书法纸等）
-- 支持导出为 PDF 或图片格式
+- 增加更多纸张类型
+- 支持导出更多格式
 - 增加多语言支持
 
 ## 贡献

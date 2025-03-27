@@ -4,6 +4,10 @@ const paperTypeSelect = document.getElementById('paper-type');
 const lineSpacingInput = document.getElementById('line-spacing');
 const lineThicknessInput = document.getElementById('line-thickness');
 const lineColorInput = document.getElementById('line-color');
+const marginTopInput = document.getElementById('margin-top');
+const marginBottomInput = document.getElementById('margin-bottom');
+const marginLeftInput = document.getElementById('margin-left');
+const marginRightInput = document.getElementById('margin-right');
 const canvas = document.getElementById('paper-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -21,6 +25,10 @@ function drawPaper() {
     const lineSpacing = parseFloat(lineSpacingInput.value);
     const lineThickness = parseFloat(lineThicknessInput.value);
     const lineColor = lineColorInput.value;
+    const marginTop = parseFloat(marginTopInput.value) * 3.78; // 转换为像素
+    const marginBottom = parseFloat(marginBottomInput.value) * 3.78;
+    const marginLeft = parseFloat(marginLeftInput.value) * 3.78;
+    const marginRight = parseFloat(marginRightInput.value) * 3.78;
 
     // 设置 Canvas 尺寸
     const size = sizes[paperSize];
@@ -34,37 +42,58 @@ function drawPaper() {
     ctx.strokeStyle = lineColor;
     ctx.lineWidth = lineThickness;
 
+    // 计算绘图区域（考虑页边距）
+    const startX = marginLeft;
+    const startY = marginTop;
+    const endX = canvas.width - marginRight;
+    const endY = canvas.height - marginBottom;
+    const contentWidth = endX - startX;
+    const contentHeight = endY - startY;
+
     // 根据纸张类型绘制
     if (paperType === 'lined') {
         // 绘制横线
-        for (let y = lineSpacing * 3.78; y < canvas.height; y += lineSpacing * 3.78) {
+        const lines = Math.floor(contentHeight / (lineSpacing * 3.78));
+        const offsetY = (contentHeight - lines * lineSpacing * 3.78) / 2;
+        for (let i = 0; i <= lines; i++) {
+            const y = startY + offsetY + i * lineSpacing * 3.78;
             ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(canvas.width, y);
+            ctx.moveTo(startX, y);
+            ctx.lineTo(endX, y);
             ctx.stroke();
         }
     } else if (paperType === 'grid') {
-        // 绘制方格（封闭边框）
-        for (let y = 0; y <= canvas.height; y += lineSpacing * 3.78) {
+        // 绘制方格
+        const cols = Math.floor(contentWidth / (lineSpacing * 3.78));
+        const rows = Math.floor(contentHeight / (lineSpacing * 3.78));
+        const offsetX = (contentWidth - cols * lineSpacing * 3.78) / 2;
+        const offsetY = (contentHeight - rows * lineSpacing * 3.78) / 2;
+
+        for (let i = 0; i <= rows; i++) {
+            const y = startY + offsetY + i * lineSpacing * 3.78;
             ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(canvas.width, y);
+            ctx.moveTo(startX + offsetX, y);
+            ctx.lineTo(endX - offsetX, y);
             ctx.stroke();
         }
-        for (let x = 0; x <= canvas.width; x += lineSpacing * 3.78) {
+        for (let j = 0; j <= cols; j++) {
+            const x = startX + offsetX + j * lineSpacing * 3.78;
             ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, canvas.height);
+            ctx.moveTo(x, startY + offsetY);
+            ctx.lineTo(x, endY - offsetY);
             ctx.stroke();
         }
-        // 绘制外框
-        ctx.beginPath();
-        ctx.rect(0, 0, canvas.width, canvas.height);
-        ctx.stroke();
     } else if (paperType === 'dot') {
         // 绘制点阵
-        for (let y = lineSpacing * 3.78; y < canvas.height; y += lineSpacing * 3.78) {
-            for (let x = lineSpacing * 3.78; x < canvas.width; x += lineSpacing * 3.78) {
+        const cols = Math.floor(contentWidth / (lineSpacing * 3.78));
+        const rows = Math.floor(contentHeight / (lineSpacing * 3.78));
+        const offsetX = (contentWidth - cols * lineSpacing * 3.78) / 2;
+        const offsetY = (contentHeight - rows * lineSpacing * 3.78) / 2;
+
+        for (let i = 0; i <= rows; i++) {
+            for (let j = 0; j <= cols; j++) {
+                const x = startX + offsetX + j * lineSpacing * 3.78;
+                const y = startY + offsetY + i * lineSpacing * 3.78;
                 ctx.beginPath();
                 ctx.arc(x, y, lineThickness * 2, 0, Math.PI * 2);
                 ctx.fillStyle = lineColor;
@@ -73,8 +102,15 @@ function drawPaper() {
         }
     } else if (paperType === 'mi') {
         // 绘制米字格
-        for (let y = 0; y < canvas.height; y += lineSpacing * 3.78) {
-            for (let x = 0; x < canvas.width; x += lineSpacing * 3.78) {
+        const cols = Math.floor(contentWidth / (lineSpacing * 3.78));
+        const rows = Math.floor(contentHeight / (lineSpacing * 3.78));
+        const offsetX = (contentWidth - cols * lineSpacing * 3.78) / 2;
+        const offsetY = (contentHeight - rows * lineSpacing * 3.78) / 2;
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                const x = startX + offsetX + j * lineSpacing * 3.78;
+                const y = startY + offsetY + i * lineSpacing * 3.78;
                 const halfSpacing = (lineSpacing * 3.78) / 2;
 
                 // 绘制外框
@@ -108,6 +144,10 @@ paperTypeSelect.addEventListener('change', drawPaper);
 lineSpacingInput.addEventListener('input', drawPaper);
 lineThicknessInput.addEventListener('input', drawPaper);
 lineColorInput.addEventListener('input', drawPaper);
+marginTopInput.addEventListener('input', drawPaper);
+marginBottomInput.addEventListener('input', drawPaper);
+marginLeftInput.addEventListener('input', drawPaper);
+marginRightInput.addEventListener('input', drawPaper);
 
 // 默认绘制横线纸
 drawPaper();

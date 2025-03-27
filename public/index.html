@@ -10,37 +10,51 @@
 <body>
     <div id="app">
         <h1>纸张生成器</h1>
-        <div class="settings-panel">
-            <h2>纸张设置</h2>
-            <label for="paper-size">纸张尺寸:</label>
-            <select id="paper-size">
-                <option value="A4">A4 (210 × 297 mm)</option>
-                <option value="A5">A5 (148 × 210 mm)</option>
-                <option value="Letter">Letter (216 × 279 mm)</option>
-            </select>
+        <div class="container">
+            <div class="paper-preview">
+                <canvas id="paper-canvas"></canvas>
+            </div>
+            <div class="settings-panel">
+                <h2>纸张设置</h2>
+                <label for="paper-size">纸张尺寸:</label>
+                <select id="paper-size">
+                    <option value="A4">A4 (210 × 297 mm)</option>
+                    <option value="A5">A5 (148 × 210 mm)</option>
+                    <option value="Letter">Letter (216 × 279 mm)</option>
+                </select>
 
-            <label for="paper-type">纸张类型:</label>
-            <select id="paper-type">
-                <option value="lined">横线纸</option>
-                <option value="grid">方格纸</option>
-                <option value="dot">点阵纸</option>
-                <option value="mi">米字格</option>
-            </select>
+                <label for="paper-type">纸张类型:</label>
+                <select id="paper-type">
+                    <option value="lined">横线纸</option>
+                    <option value="grid">方格纸</option>
+                    <option value="dot">点阵纸</option>
+                    <option value="mi">米字格</option>
+                </select>
 
-            <label for="line-spacing">线条间距 (mm):</label>
-            <input type="number" id="line-spacing" value="8" min="1">
+                <label for="line-spacing">线条间距 (mm):</label>
+                <input type="number" id="line-spacing" value="8" min="1">
 
-            <label for="line-thickness">线条粗细 (px):</label>
-            <input type="number" id="line-thickness" value="0.5" min="0.1" step="0.1">
+                <label for="line-thickness">线条粗细 (px):</label>
+                <input type="number" id="line-thickness" value="0.5" min="0.1" step="0.1">
 
-            <label for="line-color">线条颜色:</label>
-            <input type="color" id="line-color" value="#000000">
+                <label for="line-color">线条颜色:</label>
+                <input type="color" id="line-color" value="#000000">
 
-            <button id="export-png">导出为 PNG</button>
-            <button id="export-pdf">导出为 PDF</button>
-        </div>
-        <div class="paper-preview">
-            <canvas id="paper-canvas"></canvas>
+                <label for="margin-top">上边距 (mm):</label>
+                <input type="number" id="margin-top" value="20" min="0">
+
+                <label for="margin-bottom">下边距 (mm):</label>
+                <input type="number" id="margin-bottom" value="20" min="0">
+
+                <label for="margin-left">左边距 (mm):</label>
+                <input type="number" id="margin-left" value="18" min="0">
+
+                <label for="margin-right">右边距 (mm):</label>
+                <input type="number" id="margin-right" value="18" min="0">
+
+                <button id="export-png">导出为 PNG</button>
+                <button id="export-pdf">导出为 PDF</button>
+            </div>
         </div>
     </div>
     <script src="../src/scripts/app.js"></script>

@@ -56,7 +56,7 @@ function getPaperTypeName(type) {
         case 'grid': return '方格纸';
         case 'dot': return '点阵纸';
         case 'mi': return '米字格';
-        case 'practice': return '练字帖'; // 新增练字帖
+        case 'practice': return '练字帖';
         default: return '未知纸张';
     }
 }
@@ -325,7 +325,6 @@ function drawWatermark(ctx, config) {
     const fontSize = watermarkSizeInput.value;
     const color = watermarkColorInput.value;
 
-    // ...其他代码保持不变...
     ctx.save();
     ctx.globalAlpha = opacity;
     ctx.fillStyle = color;

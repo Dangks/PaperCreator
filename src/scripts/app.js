@@ -12,6 +12,17 @@ const marginRightInput = document.getElementById('margin-right');
 const canvas = document.getElementById('paper-canvas');
 const ctx = canvas.getContext('2d');
 
+// 在 DOM 元素获取部分添加
+const enableWatermarkInput = document.getElementById('enable-watermark');
+const watermarkOptions = document.querySelector('.watermark-options');
+const watermarkTextInput = document.getElementById('watermark-text');
+const watermarkOpacityInput = document.getElementById('watermark-opacity');
+const watermarkAngleInput = document.getElementById('watermark-angle');
+const watermarkSizeInput = document.getElementById('watermark-size');
+const watermarkColorInput = document.getElementById('watermark-color');
+const opacityValue = document.getElementById('opacity-value');
+const angleValue = document.getElementById('angle-value');
+
 // 纸张尺寸映射
 const sizes = {
     A4: { width: 210, height: 297 },
@@ -57,20 +68,33 @@ function getExportFileName() {
 }
 
 // 设置线条样式的函数
-function setLineStyle(ctx, lineStyle) {
-    if (lineStyle === 'solid') {
-        ctx.setLineDash([]); // 实线
-    } else if (lineStyle === 'dashed') {
-        ctx.setLineDash([10, 5]); // 虚线
-    } else if (lineStyle === 'dotted') {
-        ctx.setLineDash([2, 5]); // 点线
+function setLineStyle(ctx, lineStyle, isOuterBorder = false) {
+    // 如果是外框，始终使用实线
+    if (isOuterBorder) {
+        ctx.setLineDash([]);
+        return;
+    }
+    
+    // 根据样式设置线条
+    switch (lineStyle) {
+        case 'solid':
+            ctx.setLineDash([]); // 实线
+            break;
+        case 'dashed':
+            ctx.setLineDash([10, 5]); // 虚线
+            break;
+        case 'dotted':
+            ctx.setLineDash([2, 5]); // 点线
+            break;
     }
 }
 
 // 绘制横线纸
 function drawLined(ctx, config) {
-    const { startX, startY, endX, contentHeight, lineSpacing } = config;
+    const { startX, startY, endX, contentHeight, lineSpacing, lineStyle } = config;
     const lines = Math.floor(contentHeight / lineSpacing);
+    
+    setLineStyle(ctx, lineStyle); // 设置线条样式
     for (let i = 0; i <= lines; i++) {
         const y = startY + i * lineSpacing;
         ctx.beginPath();
@@ -82,18 +106,25 @@ function drawLined(ctx, config) {
 
 // 绘制方格纸
 function drawGrid(ctx, config) {
-    const { startX, startY, endX, endY, lineSpacing } = config;
+    const { startX, startY, endX, endY, lineSpacing, lineStyle } = config;
 
-    // 计算完整的列数和行数
+    // 设置线条样式
+    setLineStyle(ctx, lineStyle);
+
+    // 计算完整的列数和行数（向下取整，确保只画完整格子）
     const cols = Math.floor((endX - startX) / lineSpacing);
     const rows = Math.floor((endY - startY) / lineSpacing);
+
+    // 计算实际绘制区域（调整终点坐标，使其刚好容纳完整格子）
+    const actualEndX = startX + cols * lineSpacing;
+    const actualEndY = startY + rows * lineSpacing;
 
     // 绘制水平线
     for (let i = 0; i <= rows; i++) {
         const y = startY + i * lineSpacing;
         ctx.beginPath();
         ctx.moveTo(startX, y);
-        ctx.lineTo(startX + cols * lineSpacing, y); // 只绘制完整的格子
+        ctx.lineTo(actualEndX, y); // 使用调整后的终点坐标
         ctx.stroke();
     }
 
@@ -102,7 +133,7 @@ function drawGrid(ctx, config) {
         const x = startX + j * lineSpacing;
         ctx.beginPath();
         ctx.moveTo(x, startY);
-        ctx.lineTo(x, startY + rows * lineSpacing); // 只绘制完整的格子
+        ctx.lineTo(x, actualEndY); // 使用调整后的终点坐标
         ctx.stroke();
     }
 }
@@ -132,22 +163,30 @@ function drawMiOrPractice(ctx, config) {
     const cols = Math.floor(contentWidth / lineSpacing);
     const rows = Math.floor(contentHeight / lineSpacing);
 
+    // 先绘制最外层大框线（始终为实线）
+    ctx.beginPath();
+    ctx.lineWidth = lineThickness;
+    setLineStyle(ctx, 'solid', true); // 使用实线绘制外框
+    ctx.rect(startX, startY, cols * lineSpacing, rows * lineSpacing);
+    ctx.stroke();
+
+    // 绘制内部格子
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
             const x = startX + j * lineSpacing;
             const y = startY + i * lineSpacing;
             const halfSpacing = lineSpacing / 2;
 
-            // 绘制外框
+            // 绘制内部格子的外框
+            setLineStyle(ctx, lineStyle);
             ctx.beginPath();
-            ctx.lineWidth = lineThickness; // 外框线条宽度
-            ctx.setLineDash(lineStyle === 'solid' ? [] : lineStyle === 'dashed' ? [10, 5] : [2, 5]); // 根据线条样式设置外框
+            ctx.lineWidth = lineThickness;
             ctx.rect(x, y, lineSpacing, lineSpacing);
             ctx.stroke();
 
             // 绘制对角线
             ctx.beginPath();
-            ctx.lineWidth = lineThickness / 4; // 对角线线条宽度
+            ctx.lineWidth = lineThickness / 4;
             ctx.moveTo(x, y);
             ctx.lineTo(x + lineSpacing, y + lineSpacing);
             ctx.moveTo(x + lineSpacing, y);
@@ -156,7 +195,7 @@ function drawMiOrPractice(ctx, config) {
 
             // 绘制十字线
             ctx.beginPath();
-            ctx.lineWidth = lineThickness / 4; // 十字线线条宽度
+            ctx.lineWidth = lineThickness / 4;
             ctx.moveTo(x + halfSpacing, y);
             ctx.lineTo(x + halfSpacing, y + lineSpacing);
             ctx.moveTo(x, y + halfSpacing);
@@ -164,13 +203,6 @@ function drawMiOrPractice(ctx, config) {
             ctx.stroke();
         }
     }
-
-    // 绘制最外层大框线（始终为实线）
-    ctx.beginPath();
-    ctx.lineWidth = lineThickness; // 大框线条宽度
-    ctx.setLineDash([]); // 始终为实线
-    ctx.rect(startX, startY, cols * lineSpacing, rows * lineSpacing);
-    ctx.stroke();
 }
 
 // 绘制纸张的主函数
@@ -228,6 +260,12 @@ function drawPaper() {
     } else if (paperType === 'mi' || paperType === 'practice') {
         drawMiOrPractice(ctx, config);
     }
+
+    // 在所有绘制完成后添加水印
+    drawWatermark(ctx, {
+        displayWidth,
+        displayHeight
+    });
 }
 
 // 实时监听设置的更改
@@ -248,6 +286,80 @@ marginTopInput.addEventListener('input', drawPaper);
 marginBottomInput.addEventListener('input', drawPaper);
 marginLeftInput.addEventListener('input', drawPaper);
 marginRightInput.addEventListener('input', drawPaper);
+
+// 水印开关事件监听
+enableWatermarkInput.addEventListener('change', (e) => {
+    watermarkOptions.style.display = e.target.checked ? 'block' : 'none';
+    drawPaper();
+});
+
+// 水印绘制函数
+function drawWatermark(ctx, config) {
+    if (!enableWatermarkInput.checked) return;
+
+    const { displayWidth, displayHeight } = config;
+    const baseText = watermarkTextInput.value;
+    const opacity = watermarkOpacityInput.value / 100;
+    
+    // 将0-100的进度值映射到-12°到40°的角度范围(超过这个范围水印效果不理想，暂时限制范围
+    const progress = parseFloat(watermarkAngleInput.value);
+    const angle = -12 + (progress / 100) * 52; // 52是角度范围（40 - (-12)）
+    const angleInRadians = angle * Math.PI / 180;
+    
+    const fontSize = watermarkSizeInput.value;
+    const color = watermarkColorInput.value;
+
+    // ...其他代码保持不变...
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = color;
+    ctx.font = `${fontSize}px Arial`;
+
+    // 计算水印文本大小
+    const textMetrics = ctx.measureText(baseText);
+    const textWidth = textMetrics.width;
+
+    // 动态生成足够长的水印文本
+    const repeatCount = Math.ceil((displayWidth * 4) / textWidth);
+    const extendedText = Array(repeatCount).fill(baseText).join('    ');
+
+    // 设置水印间距
+    const spacingY = fontSize * 10;
+
+    // 计算水印的起始点
+    const startX = -displayWidth;
+    const startY = displayHeight + spacingY;
+
+    // 绘制倾斜的水印
+    for (let y = startY; y > -displayHeight; y -= spacingY) {
+        ctx.save();
+        ctx.translate(startX, y);
+        ctx.rotate(angleInRadians);
+        ctx.fillText(extendedText, 0, 0);
+        ctx.restore();
+    }
+
+    ctx.restore();
+}
+
+// 修改水印角度的事件监听器
+watermarkAngleInput.addEventListener('input', drawPaper);
+
+// 设置默认角度（0对应-12度）
+watermarkAngleInput.value = 0;
+
+// 添加水印设置的事件监听器
+watermarkTextInput.addEventListener('input', drawPaper);
+watermarkOpacityInput.addEventListener('input', (e) => {
+    opacityValue.textContent = e.target.value + '%';
+    drawPaper();
+});
+watermarkAngleInput.addEventListener('input', (e) => {
+    angleValue.textContent = e.target.value + '°';
+    drawPaper();
+});
+watermarkSizeInput.addEventListener('input', drawPaper);
+watermarkColorInput.addEventListener('input', drawPaper);
 
 // 默认绘制横线纸
 drawPaper();

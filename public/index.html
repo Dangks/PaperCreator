@@ -65,6 +65,39 @@
                     </div>
                 </div>
 
+                <!-- 在 settings-panel 中添加水印设置区域 -->
+                <div class="watermark-settings">
+                    <div class="watermark-toggle">
+                        <span class="toggle-text">启用水印:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="enable-watermark">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="watermark-options" style="display: none;">
+                        <label for="watermark-text">水印文字:</label>
+                        <input type="text" id="watermark-text" value="PaperCreator from Dangks">
+
+                        <label for="watermark-opacity">不透明度:</label>
+                        <div class="range-container">
+                            <input type="range" id="watermark-opacity" min="0" max="100" value="30">
+                            <span id="opacity-value">30%</span>
+                        </div>
+
+                        <label for="watermark-angle">水印角度:</label>
+                        <div class="range-container">
+                            <input type="range" id="watermark-angle" min="0" max="100" value="0">
+                        </div>
+
+                        <label for="watermark-size">字体大小:</label>
+                        <input type="number" id="watermark-size" value="16" min="8">
+
+                        <label for="watermark-color">字体颜色:</label>
+                        <input type="color" id="watermark-color" value="#999999">
+                    </div>
+                </div>
+
                 <label for="margin-top">保存输出:</label>
                 <button id="export-png">导出为 PNG</button>
                 <button id="export-pdf">导出为 PDF</button>

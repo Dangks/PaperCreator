@@ -122,3 +122,111 @@ button:hover {
     box-sizing: border-box;
     height: 36px; /* 确保输入框高度一致 */
 }
+
+/* 水印设置样式 */
+.watermark-settings {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.watermark-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 控制文字和按钮之间的间距 */
+    margin-bottom: 15px;
+}
+
+.toggle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* 控制文字和复选框之间的间距 */
+    cursor: pointer;
+}
+
+.toggle-text {
+    font-size: 14px;
+    color: #333;
+}
+
+/* 开关按钮样式 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc; /* 默认灰色 */
+    transition: 0.4s;
+    border-radius: 20px; /* 长椭圆形 */
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%; /* 圆形按钮 */
+}
+
+input:checked + .slider {
+    background-color: #4caf50; /* 开启时绿色 */
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px); /* 滑块向右移动 */
+}
+
+.watermark-options {
+    padding-top: 10px;
+}
+
+.watermark-options label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.watermark-options input[type="range"] {
+    width: calc(100% - 50px);
+    display: inline-block;
+}
+
+.watermark-options span {
+    display: inline-block;
+    width: 45px;
+    text-align: right;
+    margin-left: 5px;
+}
+
+.range-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-container input[type="range"] {
+    flex: 1;
+}
+
+.range-container span {
+    width: 50px;
+    text-align: right;
+}

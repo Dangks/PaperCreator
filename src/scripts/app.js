@@ -105,30 +105,6 @@ function drawPaper() {
             ctx.lineTo(endX, y);
             ctx.stroke();
         }
-    } else if (paperType === 'practice') {
-        // 绘制练字帖（横线 + 中线）
-        const lines = Math.floor(contentHeight / lineSpacing);
-        const offsetY = (contentHeight - lines * lineSpacing) / 2;
-        for (let i = 0; i <= lines; i++) {
-            const y = startY + offsetY + i * lineSpacing;
-            ctx.beginPath();
-            ctx.lineWidth = lineThickness * scaleFactor; // 外框线条宽度
-            ctx.moveTo(startX, y);
-            ctx.lineTo(endX, y);
-            ctx.stroke();
-
-            // 绘制中线
-            if (i < lines) {
-                const midY = y + lineSpacing / 2;
-                ctx.beginPath();
-                ctx.lineWidth = (lineThickness * scaleFactor) / 2; // 中线更细
-                ctx.setLineDash([5, 5]); // 虚线样式
-                ctx.moveTo(startX, midY);
-                ctx.lineTo(endX, midY);
-                ctx.stroke();
-                ctx.setLineDash([]); // 恢复为实线
-            }
-        }
     } else if (paperType === 'grid') {
         // 绘制方格
         const cols = Math.floor(contentWidth / lineSpacing);

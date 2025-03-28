@@ -18,6 +18,39 @@ const sizes = {
     Letter: { width: 216, height: 279 }
 };
 
+// 获取当前时间并格式化为字符串
+function getFormattedTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}${month}${day}${hours}${minutes}`;
+}
+
+// 获取纸张类型的中文名称
+function getPaperTypeName(type) {
+    switch (type) {
+        case 'lined': return '横线纸';
+        case 'grid': return '方格纸';
+        case 'dot': return '点阵纸';
+        case 'mi': return '米字格';
+        default: return '未知纸张';
+    }
+}
+
+// 获取导出的文件名
+function getExportFileName() {
+    const paperType = getPaperTypeName(paperTypeSelect.value);
+    const lineSpacing = lineSpacingInput.value;
+    const lineThickness = lineThicknessInput.value;
+    const paperSize = paperSizeSelect.value;
+    const formattedTime = getFormattedTime();
+
+    return `${paperType}-间距${lineSpacing}-线粗${lineThickness}-${paperSize}-${formattedTime}`;
+}
+
 // 绘制纸张的函数
 function drawPaper() {
     const paperSize = paperSizeSelect.value;
@@ -162,14 +195,16 @@ drawPaper();
 
 // 导出为 PNG
 document.getElementById('export-png').addEventListener('click', () => {
+    const fileName = getExportFileName() + '.png';
     const link = document.createElement('a');
-    link.download = 'paper.png';
+    link.download = fileName;
     link.href = canvas.toDataURL('image/png');
     link.click();
 });
 
 // 导出为 PDF
 document.getElementById('export-pdf').addEventListener('click', () => {
+    const fileName = getExportFileName() + '.pdf';
     const imgData = canvas.toDataURL('image/png');
     const { jsPDF } = window.jspdf; // 从 window.jspdf 中获取 jsPDF 构造函数
     const pdf = new jsPDF({
@@ -178,5 +213,5 @@ document.getElementById('export-pdf').addEventListener('click', () => {
         format: [canvas.width / 3.78, canvas.height / 3.78] // 将像素转换为毫米
     });
     pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 3.78, canvas.height / 3.78);
-    pdf.save('paper.pdf');
+    pdf.save(fileName);
 });

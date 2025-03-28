@@ -1,14 +1,13 @@
 # PaperCreator-纸张生成器 
-<div style="text-align:center;">
-  <img src="src/assets/PaperCreator.png" alt="PaperCreator" style="width:50%;">
+<div align="center">
+  <img src="src/assets/PaperCreator.png" alt="PaperCreator" style="width:45%;">
 
   [![CICD Status](https://github.com/Dangks/PaperCreator/actions/workflows/static.yml/badge.svg)](https://github.com/Dangks/PaperCreator/actions/workflows/static.yml)
-
   ![Website](https://img.shields.io/badge/Website-PaperCreator-blue?style=flat&logo=github&logoColor=white&link=https://dangks.github.io/PaperCreator/)
 
 </div>
 
-一个基于 HTML5 Canvas 的纸张生成工具，支持生成多种格式的纸张，如横线纸、方格纸、点阵纸和米字格等。用户可以自定义纸张尺寸、线条间距、线条粗细和颜色等参数，并可以导出为图片或 PDF 文件用于打印。
+本项目是一个基于 HTML5 Canvas 的纸张生成工具，支持生成多种格式的纸张，如横线纸、方格纸、点阵纸和米字格等。用户可以自定义纸张尺寸、线条间距、线条粗细和颜色等参数，并可以导出为图片或 PDF 文件用于打印。
 
 ---
 
@@ -39,11 +38,13 @@
 PaperCreator/   
 ├── index.html  
 ├── src
-│    ├─scripts  
-│    │  ├── app.js  
-│    │  └── jspdf.umd.min.js  
-│    └─styles  
-│       └── styles.css   
+│    ├─ assets
+│    │   └── logo.png
+│    ├─ scripts  
+│    │   ├── app.js  
+│    │   └── jspdf.umd.min.js  
+│    └─ styles  
+│        └── styles.css   
 ├── LICENSE  
 └── README.md  
 ```

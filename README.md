@@ -1,6 +1,10 @@
-# PaperCreator-纸张生成器
+# PaperCreator-纸张生成器 
 一个基于 HTML5 Canvas 的纸张生成工具，支持生成多种格式的纸张，如横线纸、方格纸、点阵纸和米字格等。用户可以自定义纸张尺寸、线条间距、线条粗细和颜色等参数，并可以导出为图片或 PDF 文件用于打印。
 
+---
+[![Deploy static content to Pages](https://github.com/Dangks/PaperCreator/actions/workflows/static.yml/badge.svg)](https://github.com/Dangks/PaperCreator/actions/workflows/static.yml)
+
+## 体验链接: [PaperCreator](https://dangks.github.io/PaperCreator/)
 
 ## 功能特性
 - **纸张类型**：

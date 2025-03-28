@@ -25,7 +25,6 @@ PaperCreator/
 │    ├─scripts  
 │    │  ├── app.js  
 │    │  └── jspdf.umd.min.js  
-│    │
 │    └─styles  
 │       └── styles.css   
 ├── LICENSE  
@@ -72,8 +71,10 @@ PaperCreator/
 
 
 ## 效果预览
-![image](https://github.com/user-attachments/assets/1b5a9299-9d00-4f9b-afe2-fce07f3fa4d4)
-![image](https://github.com/user-attachments/assets/09f9eb23-5d2d-4a7a-b07d-935cab264762)
-![image](https://github.com/user-attachments/assets/c131a4fe-6105-41c5-996a-6ea1fce63eb5)
+![image](https://github.com/user-attachments/assets/2a9cf9c7-9687-4e56-87b3-2ec49d020efe)
+![image](https://github.com/user-attachments/assets/52369a74-7ae9-4a99-86ff-69490e020f0d)
+![image](https://github.com/user-attachments/assets/2a919ea5-9fef-45bc-bcd8-88cc8aa967a8)
+
+
 
 

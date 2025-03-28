@@ -24,8 +24,7 @@
 ## 项目结构
 ```bash
 PaperCreator/   
-├── public   
-│    └── index.html  
+├── index.html  
 ├── src
 │    ├─scripts  
 │    │  ├── app.js  
@@ -43,7 +42,7 @@ PaperCreator/
    git clone https://github.com/Dangks/PaperCreator.git
    cd PaperCreator    # 进入项目目录
 ```
-2. 打开 public/index.html 文件，使用浏览器运行项目。
+2. 打开 index.html 文件，使用浏览器运行项目。
 3. 在页面中选择纸张类型和设置参数，点击“生成纸张”按钮即可生成预览并导出打印
 
 
@@ -79,7 +78,5 @@ PaperCreator/
 ![image](https://github.com/user-attachments/assets/2a9cf9c7-9687-4e56-87b3-2ec49d020efe)
 ![image](https://github.com/user-attachments/assets/52369a74-7ae9-4a99-86ff-69490e020f0d)
 ![image](https://github.com/user-attachments/assets/2a919ea5-9fef-45bc-bcd8-88cc8aa967a8)
-
-
 
 

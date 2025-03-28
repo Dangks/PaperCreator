@@ -23,6 +23,11 @@ const watermarkColorInput = document.getElementById('watermark-color');
 const opacityValue = document.getElementById('opacity-value');
 const angleValue = document.getElementById('angle-value');
 
+// 在获取 DOM 元素的部分添加
+const marginsHeader = document.getElementById('margins-header');
+const marginsContent = document.querySelector('.margins-content');
+const toggleIcon = marginsHeader.querySelector('.toggle-icon');
+
 // 纸张尺寸映射
 const sizes = {
     A4: { width: 210, height: 297 },
@@ -210,7 +215,7 @@ function drawPaper() {
     const paperSize = paperSizeSelect.value;
     const paperType = paperTypeSelect.value;
     const lineSpacing = parseFloat(lineSpacingInput.value) * 3.78; // 转换为像素
-    const lineThickness = parseFloat(lineThicknessInput.value);
+    const lineThickness = parseFloat(parseFloat(lineThicknessInput.value).toFixed(1));
     const lineColor = lineColorInput.value;
     const lineStyle = lineStyleSelect.value; // 获取线条样式
     const marginTop = parseFloat(marginTopInput.value) * 3.78;
@@ -279,7 +284,11 @@ paperTypeSelect.addEventListener('change', () => {
     drawPaper();
 });
 lineSpacingInput.addEventListener('input', drawPaper);
-lineThicknessInput.addEventListener('input', drawPaper);
+lineThicknessInput.addEventListener('input', (e) => {
+    // 确保输入值保留一位小数
+    e.target.value = parseFloat(e.target.value).toFixed(1);
+    drawPaper();
+});
 lineColorInput.addEventListener('input', drawPaper);
 lineStyleSelect.addEventListener('input', drawPaper); // 新增监听线条样式的更改
 marginTopInput.addEventListener('input', drawPaper);
@@ -291,6 +300,13 @@ marginRightInput.addEventListener('input', drawPaper);
 enableWatermarkInput.addEventListener('change', (e) => {
     watermarkOptions.style.display = e.target.checked ? 'block' : 'none';
     drawPaper();
+});
+
+// 在现有的事件监听器后添加
+marginsHeader.addEventListener('click', () => {
+    const isExpanded = marginsContent.style.display === 'block';
+    marginsContent.style.display = isExpanded ? 'none' : 'block';
+    toggleIcon.classList.toggle('expanded');
 });
 
 // 水印绘制函数

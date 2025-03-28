@@ -48,20 +48,25 @@
                     <option value="dotted">点线</option>
                 </select>
                 
-                <!-- 页边距设置 -->
+                <!-- 将原有的页边距设置部分替换为以下代码 -->
                 <div class="margin-settings">
-                    <label for="margin-top">纸张边距 (mm):</label>
-                    <div class="margin-row">
-                        <label for="margin-top">上 :</label>
-                        <input type="number" id="margin-top" value="20" min="0">
-                        <label for="margin-bottom">下 :</label>
-                        <input type="number" id="margin-bottom" value="20" min="0">
+                    <div class="margin-header" id="margins-header">
+                        <label>纸张边距 (mm):</label>
+                        <span class="toggle-icon">▼</span>
                     </div>
-                    <div class="margin-row">
-                        <label for="margin-left">左 :</label>
-                        <input type="number" id="margin-left" value="18" min="0">
-                        <label for="margin-right">右 :</label>
-                        <input type="number" id="margin-right" value="18" min="0">
+                    <div class="margins-content" style="display: none;">
+                        <div class="margin-row">
+                            <label for="margin-top">上 :</label>
+                            <input type="number" id="margin-top" value="20" min="0">
+                            <label for="margin-bottom">下 :</label>
+                            <input type="number" id="margin-bottom" value="20" min="0">
+                        </div>
+                        <div class="margin-row">
+                            <label for="margin-left">左 :</label>
+                            <input type="number" id="margin-left" value="18" min="0">
+                            <label for="margin-right">右 :</label>
+                            <input type="number" id="margin-right" value="18" min="0">
+                        </div>
                     </div>
                 </div>
 

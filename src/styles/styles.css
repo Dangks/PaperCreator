@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0; /* 灰白色背景 */
+    background-color: #9dd0ec; /* 浅蓝色背景 */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -29,7 +29,7 @@ h1 {
 
 .paper-preview {
     flex: 2;
-    background-color: #fff; /* 纸张白色背景 */
+    background-color: #f3d3d3; /* 浅粉色背景 */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -42,13 +42,13 @@ canvas#paper-canvas {
     width: 100%;
     max-width: 800px;
     height: auto;
-    background-color: #fff; /* 纸张白色 */
+    background-color: #ffffff; /* 纸张白色 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 模拟纸张阴影 */
 }
 
 .settings-panel {
     flex: 1;
-    background: #fff;
+    background: #c3f1ee;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -56,7 +56,7 @@ canvas#paper-canvas {
 
 .settings-panel h2 {
     margin-top: 0;
-    color: #555;
+    color: #000000;
 }
 
 .settings-panel label {
@@ -93,6 +93,27 @@ button:hover {
 /* 页边距设置容器 */
 .margin-settings {
     margin-top: 10px;
+}
+
+/* 在现有的 margin-settings 样式后添加以下样式 */
+.margin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px 0;
+}
+
+.margin-header label {
+    margin: 0;
+}
+
+.toggle-icon {
+    transition: transform 0.3s;
+}
+
+.toggle-icon.expanded {
+    transform: rotate(180deg);
 }
 
 /* 每行的页边距设置 */

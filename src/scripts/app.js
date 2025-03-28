@@ -4,6 +4,7 @@ const paperTypeSelect = document.getElementById('paper-type');
 const lineSpacingInput = document.getElementById('line-spacing');
 const lineThicknessInput = document.getElementById('line-thickness');
 const lineColorInput = document.getElementById('line-color');
+const lineStyleSelect = document.getElementById('line-style'); // 新增获取线条样式
 const marginTopInput = document.getElementById('margin-top');
 const marginBottomInput = document.getElementById('margin-bottom');
 const marginLeftInput = document.getElementById('margin-left');
@@ -55,26 +56,144 @@ function getExportFileName() {
     return `${paperType}-间距${lineSpacing}-线粗${lineThickness}-${paperSize}-${formattedTime}`;
 }
 
-// 绘制纸张的函数
+// 设置线条样式的函数
+function setLineStyle(ctx, lineStyle) {
+    if (lineStyle === 'solid') {
+        ctx.setLineDash([]); // 实线
+    } else if (lineStyle === 'dashed') {
+        ctx.setLineDash([10, 5]); // 虚线
+    } else if (lineStyle === 'dotted') {
+        ctx.setLineDash([2, 5]); // 点线
+    }
+}
+
+// 绘制横线纸
+function drawLined(ctx, config) {
+    const { startX, startY, endX, contentHeight, lineSpacing } = config;
+    const lines = Math.floor(contentHeight / lineSpacing);
+    for (let i = 0; i <= lines; i++) {
+        const y = startY + i * lineSpacing;
+        ctx.beginPath();
+        ctx.moveTo(startX, y);
+        ctx.lineTo(endX, y);
+        ctx.stroke();
+    }
+}
+
+// 绘制方格纸
+function drawGrid(ctx, config) {
+    const { startX, startY, endX, endY, lineSpacing } = config;
+
+    // 计算完整的列数和行数
+    const cols = Math.floor((endX - startX) / lineSpacing);
+    const rows = Math.floor((endY - startY) / lineSpacing);
+
+    // 绘制水平线
+    for (let i = 0; i <= rows; i++) {
+        const y = startY + i * lineSpacing;
+        ctx.beginPath();
+        ctx.moveTo(startX, y);
+        ctx.lineTo(startX + cols * lineSpacing, y); // 只绘制完整的格子
+        ctx.stroke();
+    }
+
+    // 绘制垂直线
+    for (let j = 0; j <= cols; j++) {
+        const x = startX + j * lineSpacing;
+        ctx.beginPath();
+        ctx.moveTo(x, startY);
+        ctx.lineTo(x, startY + rows * lineSpacing); // 只绘制完整的格子
+        ctx.stroke();
+    }
+}
+
+// 绘制点阵纸
+function drawDot(ctx, config) {
+    const { startX, startY, contentWidth, contentHeight, lineSpacing, lineThickness } = config;
+    const cols = Math.floor(contentWidth / lineSpacing);
+    const rows = Math.floor(contentHeight / lineSpacing);
+
+    for (let i = 0; i <= rows; i++) {
+        for (let j = 0; j <= cols; j++) {
+            const x = startX + j * lineSpacing;
+            const y = startY + i * lineSpacing;
+            ctx.beginPath();
+            ctx.arc(x, y, lineThickness * 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
+// 绘制米字格或练字帖
+function drawMiOrPractice(ctx, config) {
+    const { startX, startY, contentWidth, contentHeight, lineSpacing, lineThickness, lineStyle } = config;
+
+    // 计算完整的列数和行数
+    const cols = Math.floor(contentWidth / lineSpacing);
+    const rows = Math.floor(contentHeight / lineSpacing);
+
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            const x = startX + j * lineSpacing;
+            const y = startY + i * lineSpacing;
+            const halfSpacing = lineSpacing / 2;
+
+            // 绘制外框
+            ctx.beginPath();
+            ctx.lineWidth = lineThickness; // 外框线条宽度
+            ctx.setLineDash(lineStyle === 'solid' ? [] : lineStyle === 'dashed' ? [10, 5] : [2, 5]); // 根据线条样式设置外框
+            ctx.rect(x, y, lineSpacing, lineSpacing);
+            ctx.stroke();
+
+            // 绘制对角线
+            ctx.beginPath();
+            ctx.lineWidth = lineThickness / 4; // 对角线线条宽度
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + lineSpacing, y + lineSpacing);
+            ctx.moveTo(x + lineSpacing, y);
+            ctx.lineTo(x, y + lineSpacing);
+            ctx.stroke();
+
+            // 绘制十字线
+            ctx.beginPath();
+            ctx.lineWidth = lineThickness / 4; // 十字线线条宽度
+            ctx.moveTo(x + halfSpacing, y);
+            ctx.lineTo(x + halfSpacing, y + lineSpacing);
+            ctx.moveTo(x, y + halfSpacing);
+            ctx.lineTo(x + lineSpacing, y + halfSpacing);
+            ctx.stroke();
+        }
+    }
+
+    // 绘制最外层大框线（始终为实线）
+    ctx.beginPath();
+    ctx.lineWidth = lineThickness; // 大框线条宽度
+    ctx.setLineDash([]); // 始终为实线
+    ctx.rect(startX, startY, cols * lineSpacing, rows * lineSpacing);
+    ctx.stroke();
+}
+
+// 绘制纸张的主函数
 function drawPaper() {
     const paperSize = paperSizeSelect.value;
     const paperType = paperTypeSelect.value;
     const lineSpacing = parseFloat(lineSpacingInput.value) * 3.78; // 转换为像素
     const lineThickness = parseFloat(lineThicknessInput.value);
     const lineColor = lineColorInput.value;
-    const marginTop = parseFloat(marginTopInput.value) * 3.78; // 转换为像素
+    const lineStyle = lineStyleSelect.value; // 获取线条样式
+    const marginTop = parseFloat(marginTopInput.value) * 3.78;
     const marginBottom = parseFloat(marginBottomInput.value) * 3.78;
     const marginLeft = parseFloat(marginLeftInput.value) * 3.78;
     const marginRight = parseFloat(marginRightInput.value) * 3.78;
 
-    // 设置 Canvas 尺寸（逻辑尺寸）
+    // 设置 Canvas 尺寸
     const size = sizes[paperSize];
-    const displayWidth = size.width * 3.78; // 显示尺寸
+    const displayWidth = size.width * 3.78;
     const displayHeight = size.height * 3.78;
-    const scaleFactor = 2; // 分辨率倍数
-    canvas.width = displayWidth * scaleFactor; // 实际像素尺寸
+    const scaleFactor = 2;
+    canvas.width = displayWidth * scaleFactor;
     canvas.height = displayHeight * scaleFactor;
-    canvas.style.width = `${displayWidth}px`; // 显示尺寸
+    canvas.style.width = `${displayWidth}px`;
     canvas.style.height = `${displayHeight}px`;
 
     // 清空 Canvas
@@ -82,10 +201,14 @@ function drawPaper() {
 
     // 设置绘图样式
     ctx.strokeStyle = lineColor;
-    ctx.lineWidth = lineThickness * scaleFactor; // 根据分辨率调整线条粗细
-    ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0); // 设置缩放比例
+    ctx.fillStyle = lineColor;
+    ctx.lineWidth = lineThickness * scaleFactor;
+    ctx.setTransform(scaleFactor, 0, 0, scaleFactor, 0, 0);
 
-    // 计算绘图区域（考虑页边距）
+    // 设置线条样式
+    setLineStyle(ctx, lineStyle);
+
+    // 计算绘图区域
     const startX = marginLeft;
     const startY = marginTop;
     const endX = displayWidth - marginRight;
@@ -93,93 +216,17 @@ function drawPaper() {
     const contentWidth = endX - startX;
     const contentHeight = endY - startY;
 
-    // 根据纸张类型绘制
+    const config = { startX, startY, endX, endY, contentWidth, contentHeight, lineSpacing, lineThickness, lineStyle };
+
+    // 根据纸张类型调用对应的绘制函数
     if (paperType === 'lined') {
-        // 绘制横线
-        const lines = Math.floor(contentHeight / lineSpacing);
-        const offsetY = (contentHeight - lines * lineSpacing) / 2;
-        for (let i = 0; i <= lines; i++) {
-            const y = startY + offsetY + i * lineSpacing;
-            ctx.beginPath();
-            ctx.moveTo(startX, y);
-            ctx.lineTo(endX, y);
-            ctx.stroke();
-        }
+        drawLined(ctx, config);
     } else if (paperType === 'grid') {
-        // 绘制方格
-        const cols = Math.floor(contentWidth / lineSpacing);
-        const rows = Math.floor(contentHeight / lineSpacing);
-        const offsetX = (contentWidth - cols * lineSpacing) / 2;
-        const offsetY = (contentHeight - rows * lineSpacing) / 2;
-
-        for (let i = 0; i <= rows; i++) {
-            const y = startY + offsetY + i * lineSpacing;
-            ctx.beginPath();
-            ctx.moveTo(startX + offsetX, y);
-            ctx.lineTo(endX - offsetX, y);
-            ctx.stroke();
-        }
-        for (let j = 0; j <= cols; j++) {
-            const x = startX + offsetX + j * lineSpacing;
-            ctx.beginPath();
-            ctx.moveTo(x, startY + offsetY);
-            ctx.lineTo(x, endY - offsetY);
-            ctx.stroke();
-        }
+        drawGrid(ctx, config);
     } else if (paperType === 'dot') {
-        // 绘制点阵
-        const cols = Math.floor(contentWidth / lineSpacing);
-        const rows = Math.floor(contentHeight / lineSpacing);
-        const offsetX = (contentWidth - cols * lineSpacing) / 2;
-        const offsetY = (contentHeight - rows * lineSpacing) / 2;
-
-        for (let i = 0; i <= rows; i++) {
-            for (let j = 0; j <= cols; j++) {
-                const x = startX + offsetX + j * lineSpacing;
-                const y = startY + offsetY + i * lineSpacing;
-                ctx.beginPath();
-                ctx.arc(x, y, lineThickness * 2, 0, Math.PI * 2);
-                ctx.fillStyle = lineColor;
-                ctx.fill();
-            }
-        }
+        drawDot(ctx, config);
     } else if (paperType === 'mi' || paperType === 'practice') {
-        // 绘制米字格或练字帖
-        const cols = Math.floor(contentWidth / lineSpacing);
-        const rows = Math.floor(contentHeight / lineSpacing);
-        const offsetX = (contentWidth - cols * lineSpacing) / 2;
-        const offsetY = (contentHeight - rows * lineSpacing) / 2;
-
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                const x = startX + offsetX + j * lineSpacing;
-                const y = startY + offsetY + i * lineSpacing;
-                const halfSpacing = lineSpacing / 2;
-
-                // 绘制外框
-                ctx.beginPath();
-                ctx.lineWidth = lineThickness * scaleFactor; // 外框线条宽度
-                ctx.rect(x, y, lineSpacing, lineSpacing);
-                ctx.stroke();
-
-                // 绘制对角线
-                ctx.beginPath();
-                ctx.lineWidth = (lineThickness * scaleFactor) / 4; // 米字线条宽度
-                ctx.moveTo(x, y);
-                ctx.lineTo(x + lineSpacing, y + lineSpacing);
-                ctx.moveTo(x + lineSpacing, y);
-                ctx.lineTo(x, y + lineSpacing);
-                ctx.stroke();
-
-                // 绘制十字线
-                ctx.beginPath();
-                ctx.moveTo(x + halfSpacing, y);
-                ctx.lineTo(x + halfSpacing, y + lineSpacing);
-                ctx.moveTo(x, y + halfSpacing);
-                ctx.lineTo(x + lineSpacing, y + halfSpacing);
-                ctx.stroke();
-            }
-        }
+        drawMiOrPractice(ctx, config);
     }
 }
 
@@ -196,6 +243,7 @@ paperTypeSelect.addEventListener('change', () => {
 lineSpacingInput.addEventListener('input', drawPaper);
 lineThicknessInput.addEventListener('input', drawPaper);
 lineColorInput.addEventListener('input', drawPaper);
+lineStyleSelect.addEventListener('input', drawPaper); // 新增监听线条样式的更改
 marginTopInput.addEventListener('input', drawPaper);
 marginBottomInput.addEventListener('input', drawPaper);
 marginLeftInput.addEventListener('input', drawPaper);

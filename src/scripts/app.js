@@ -18,6 +18,9 @@ const sizes = {
     Letter: { width: 216, height: 279 }
 };
 
+// 默认线条间距
+const defaultLineSpacing = 8;
+
 // 获取当前时间并格式化为字符串
 function getFormattedTime() {
     const now = new Date();
@@ -36,6 +39,7 @@ function getPaperTypeName(type) {
         case 'grid': return '方格纸';
         case 'dot': return '点阵纸';
         case 'mi': return '米字格';
+        case 'practice': return '练字帖'; // 新增练字帖
         default: return '未知纸张';
     }
 }
@@ -101,6 +105,30 @@ function drawPaper() {
             ctx.lineTo(endX, y);
             ctx.stroke();
         }
+    } else if (paperType === 'practice') {
+        // 绘制练字帖（横线 + 中线）
+        const lines = Math.floor(contentHeight / lineSpacing);
+        const offsetY = (contentHeight - lines * lineSpacing) / 2;
+        for (let i = 0; i <= lines; i++) {
+            const y = startY + offsetY + i * lineSpacing;
+            ctx.beginPath();
+            ctx.lineWidth = lineThickness * scaleFactor; // 外框线条宽度
+            ctx.moveTo(startX, y);
+            ctx.lineTo(endX, y);
+            ctx.stroke();
+
+            // 绘制中线
+            if (i < lines) {
+                const midY = y + lineSpacing / 2;
+                ctx.beginPath();
+                ctx.lineWidth = (lineThickness * scaleFactor) / 2; // 中线更细
+                ctx.setLineDash([5, 5]); // 虚线样式
+                ctx.moveTo(startX, midY);
+                ctx.lineTo(endX, midY);
+                ctx.stroke();
+                ctx.setLineDash([]); // 恢复为实线
+            }
+        }
     } else if (paperType === 'grid') {
         // 绘制方格
         const cols = Math.floor(contentWidth / lineSpacing);
@@ -139,8 +167,8 @@ function drawPaper() {
                 ctx.fill();
             }
         }
-    } else if (paperType === 'mi') {
-        // 绘制米字格
+    } else if (paperType === 'mi' || paperType === 'practice') {
+        // 绘制米字格或练字帖
         const cols = Math.floor(contentWidth / lineSpacing);
         const rows = Math.floor(contentHeight / lineSpacing);
         const offsetX = (contentWidth - cols * lineSpacing) / 2;
@@ -181,7 +209,14 @@ function drawPaper() {
 
 // 实时监听设置的更改
 paperSizeSelect.addEventListener('change', drawPaper);
-paperTypeSelect.addEventListener('change', drawPaper);
+paperTypeSelect.addEventListener('change', () => {
+    if (paperTypeSelect.value === 'practice') {
+        lineSpacingInput.value = 15; // 当选择练字帖时，默认间距为 15mm
+    } else {
+        lineSpacingInput.value = defaultLineSpacing; // 切换回其他纸张类型时，恢复默认间距 8mm
+    }
+    drawPaper();
+});
 lineSpacingInput.addEventListener('input', drawPaper);
 lineThicknessInput.addEventListener('input', drawPaper);
 lineColorInput.addEventListener('input', drawPaper);
